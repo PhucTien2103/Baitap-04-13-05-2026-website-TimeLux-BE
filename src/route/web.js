@@ -1,7 +1,13 @@
 import express from "express";
 import homeController from "../controllers/homeController";
 import * as authController from "../controllers/auth.controller";
-import { registerLimiter, registerValidator } from "../middleware/auth.middleware";
+import {
+    forgotPasswordLimiter,
+    forgotPasswordValidator,
+    registerLimiter,
+    registerValidator,
+    resetPasswordValidator
+} from "../middleware/auth.middleware";
 
 let router = express.Router();
 
@@ -26,8 +32,18 @@ let initWebRoutes = (app) => {
         return res.render('verifyOtp.ejs');
     });
 
+    router.get('/forgot-password-page', (req, res) => {
+        return res.render('forgotPassword.ejs');
+    });
+
+    router.get('/reset-password-page', (req, res) => {
+        return res.render('resetPassword.ejs');
+    });
+
     router.post('/api/register', registerLimiter, registerValidator, authController.registerRequest);
     router.post('/api/verify-otp', authController.verifyOTP);
+    router.post('/api/forgot-password', forgotPasswordLimiter, forgotPasswordValidator, authController.forgotPasswordRequest);
+    router.post('/api/reset-password', resetPasswordValidator, authController.resetPassword);
 
     return app.use("/", router);
 }

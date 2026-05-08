@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác thực OTP</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4 border p-4 shadow text-center">
+            <h3>Nhập mã OTP</h3>
+            <p>Mã đã được gửi về email của bạn</p>
+            <input type="text" id="otpCode" class="form-control mb-3" placeholder="6 chữ số">
+            <button onclick="verify()" class="btn btn-primary btn-block">Xác thực</button>
+        </div>
+    </div>
+
+    <script>
+        async function verify() {
+            const data = {
+                email: localStorage.getItem('email'),
+                tempToken: localStorage.getItem('tempToken'),
+                otp: document.getElementById('otpCode').value
+            };
+            const res = await fetch('/api/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if (res.ok) {
+                alert("Đăng ký thành công!");
+                localStorage.clear();
+                window.location.href = '/get-crud'; 
+            } else {
+                alert(result.error);
+            }
+        }
+    </script>
+</body>
+</html>

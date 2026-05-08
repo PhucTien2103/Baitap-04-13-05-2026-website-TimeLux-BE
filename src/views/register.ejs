@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký tài khoản - OTP</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 border p-4 shadow">
+            <h2 class="text-center">Đăng ký mới</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>First Name</label>
+                        <input type="text" id="firstName" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Last Name</label>
+                        <input type="text" id="lastName" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">Gửi mã OTP</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value
+            };
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if (res.ok) {
+                alert(result.message);
+                localStorage.setItem('tempToken', result.tempToken);
+                localStorage.setItem('email', data.email);
+                window.location.href = '/verify-otp-page'; 
+            } else {
+                alert(JSON.stringify(result.errors || result.error));
+            }
+        };
+    </script>
+</body>
+</html>

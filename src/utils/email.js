@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 
 export const sendOTPEmail = async (email, otp) => {
-    // Cấu hình "người gửi" - Dùng thông tin từ .env của bạn
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {

@@ -47,14 +47,22 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
+            
             const result = await res.json();
+            
             if (res.ok) {
                 alert(result.message);
                 localStorage.setItem('tempToken', result.tempToken);
                 localStorage.setItem('email', data.email);
                 window.location.href = '/verify-otp-page'; 
             } else {
-                alert(JSON.stringify(result.errors || result.error));
+                if (result.errors && result.errors.length > 0) {
+                    alert("Lỗi: " + result.errors[0].msg);
+                } else if (result.error) {
+                    alert("Lỗi: " + result.error);
+                } else {
+                    alert("Có lỗi xảy ra, vui lòng thử lại!");
+                }
             }
         };
     </script>

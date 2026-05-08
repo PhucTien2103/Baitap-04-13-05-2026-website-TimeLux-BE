@@ -16,4 +16,4 @@ const connectDB = async () => {
     }
 }
 
-export default connectDB; // Sửa từ module.exports
+export default connectDB; 

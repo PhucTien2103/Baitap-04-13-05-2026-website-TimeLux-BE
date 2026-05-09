@@ -1,7 +1,7 @@
-import User from '../models/user';
-import CRUDService from '../services/CRUDService';
+import User from '../models/user.js';
+import * as CRUDService from '../services/CRUDService.js';
 
-let getHomePage = async (req, res) => {
+export const getHomePage = async (req, res) => {
     try {
         let data = await User.find().lean();
         return res.render('homepage.ejs', {
@@ -12,28 +12,28 @@ let getHomePage = async (req, res) => {
     }
 }
 
-let getAboutPage = (req, res) => {
+export const getAboutPage = (req, res) => {
     return res.render('test/about.ejs');
 }
 
-let getCRUD = (req, res) => {
+export const getCRUD = (req, res) => {
     return res.render('crud.ejs');
 }
 
-let postCRUD = async (req, res) => {
+export const postCRUD = async (req, res) => {
     let message = await CRUDService.createNewUser(req.body);
     console.log(message);
     return res.send('Post crud to server success (MongoDB)');
 }
 
-let getFindAllCrud = async (req, res) => {
+export const getFindAllCrud = async (req, res) => {
     let data = await CRUDService.getAllUser();
     return res.render('users/findAllUser.ejs', {
         datalist: data
     });
 }
 
-let getEditCRUD = async (req, res) => {
+export const getEditCRUD = async (req, res) => {
     let userId = req.query.id; 
     if (userId) {
         let userData = await CRUDService.getUserInfoById(userId);
@@ -45,7 +45,7 @@ let getEditCRUD = async (req, res) => {
     }
 }
 
-let putCRUD = async (req, res) => {
+export const putCRUD = async (req, res) => {
     let data = req.body;
     let data1 = await CRUDService.updateUser(data);
     return res.render('users/findAllUser.ejs', {
@@ -53,7 +53,7 @@ let putCRUD = async (req, res) => {
     });
 }
 
-let deleteCRUD = async (req, res) => {
+export const deleteCRUD = async (req, res) => {
     let id = req.query.id;
     if (id) {
         await CRUDService.deleteUserById(id);
@@ -62,14 +62,3 @@ let deleteCRUD = async (req, res) => {
         return res.send('Người dùng không tồn tại!');
     }
 }
-
-module.exports = {
-    getHomePage,
-    getAboutPage,
-    getCRUD,
-    postCRUD,
-    getFindAllCrud,
-    getEditCRUD,
-    putCRUD,
-    deleteCRUD
-};

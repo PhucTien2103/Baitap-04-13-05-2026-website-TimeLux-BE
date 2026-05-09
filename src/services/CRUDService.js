@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
-import User from '../models/user';
+import User from '../models/user.js';
 
 const salt = bcrypt.genSaltSync(10);
 
-let createNewUser = async (data) => {
+export const createNewUser = async (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let hashPasswordFromBcrypt = await hashUserPassword(data.password);
@@ -12,14 +12,15 @@ let createNewUser = async (data) => {
                 password: hashPasswordFromBcrypt,
                 firstName: data.firstName,
                 lastName: data.lastName,
-                address: data.address,
-                phoneNumber: data.phoneNumber,
+                address: data.address || '', 
+                phoneNumber: data.phoneNumber || '',
                 gender: data.gender === '1' ? true : false,
-                roleId: data.roleId
+                roleId: data.roleId || 'R2',
+                isActive: true 
             });
 
             await newUser.save();
-            resolve('OK! Bùi Thanh Tùng đã tạo user mới vào MongoDB thành công');
+            resolve('OK! Tạo user thành công');
         } catch (e) {
             reject(e);
         }
@@ -37,7 +38,7 @@ let hashUserPassword = (password) => {
     });
 }
 
-let getAllUser = () => {
+export const getAllUser = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let users = await User.find().lean();
@@ -48,7 +49,7 @@ let getAllUser = () => {
     });
 }
 
-let getUserInfoById = (userId) => {
+export const getUserInfoById = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             let user = await User.findById(userId).lean();
@@ -63,7 +64,7 @@ let getUserInfoById = (userId) => {
     });
 }
 
-let updateUser = (data) => {
+export const updateUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             await User.findByIdAndUpdate(data.id, {
@@ -79,7 +80,7 @@ let updateUser = (data) => {
     });
 }
 
-let deleteUserById = (userId) => {
+export const deleteUserById = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             await User.findByIdAndDelete(userId);
@@ -89,11 +90,3 @@ let deleteUserById = (userId) => {
         }
     });
 }
-
-module.exports = {
-    createNewUser,
-    getAllUser,
-    getUserInfoById,
-    updateUser,
-    deleteUserById
-};

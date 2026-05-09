@@ -1,7 +1,7 @@
 import express from "express";
-import homeController from "../controllers/homeController";
-import * as authController from "../controllers/auth.controller";
-import { registerLimiter, registerValidator } from "../middleware/auth.middleware";
+import * as homeController from "../controllers/homeController.js";
+import * as authController from "../controllers/auth.controller.js";
+import { registerLimiter, registerValidator } from "../middleware/auth.middleware.js";
 
 let router = express.Router();
 

@@ -1,0 +1,184 @@
+{
+  "info": {
+    "_postman_id": "2bedb093-23bb-4891-8c0d-212b161ae3bd",
+    "name": "BTVN_Register_BuiThanhTung",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48493750"
+  },
+  "item": [
+    {
+      "name": "Đăng ký - Gửi OTP",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"ginasthanh@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"firstName\": \"Thanh\",\r\n  \"lastName\": \"Gina\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8088/api/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8088",
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"otp\": \"594600\",\r\n  \"tempToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdpbmFzdGhhbmhAZ21haWwuY29tIiwiaGFzaGVkUGFzc3dvcmQiOiIkMmIkMTAkMHo5LjIzeDBTTGMyMERIT21vejBILlhTUWJEY2M2WHk3SmJ4VzJZQWxhY0ZZNm9mYW1rTlMiLCJmaXJzdE5hbWUiOiJUaGFuaCIsImxhc3ROYW1lIjoiR2luYSIsImlhdCI6MTc3ODQzMDQ1MiwiZXhwIjoxNzc4NDMxMDUyfQ._HEZ8ZF3kIv4n33bmHmScRpBJdWC9sH3Ey_FxnRKHVg\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8088/api/verify-otp",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8088",
+          "path": [
+            "api",
+            "verify-otp"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Đăng ký - Lỗi thiếu First Name",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"ginasthanh@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"lastName\": \"Gina\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8088/api/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8088",
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Đăng ký - Lỗi sai định dạng Email",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"gina-sai-dinh-dang\",\r\n  \"password\": \"123456\",\r\n  \"firstName\": \"Thanh\",\r\n  \"lastName\": \"Gina\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8088/api/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8088",
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Xác thực - Sai mã OTP",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"otp\": \"000000\",\r\n  \"tempToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdpbmFzdGhhbmhAZ21haWwuY29tIiwiaGFzaGVkUGFzc3dvcmQiOiIkMmIkMTAkMHo5LjIzeDBTTGMyMERIT21vejBILlhTUWJEY2M2WHk3SmJ4VzJZQWxhY0ZZNm9mYW1rTlMiLCJmaXJzdE5hbWUiOiJUaGFuaCIsImxhc3ROYW1lIjoiR2luYSIsImlhdCI6MTc3ODQzMDQ1MiwiZXhwIjoxNzc4NDMxMDUyfQ._HEZ8ZF3kIv4n33bmHmScRpBJdWC9sH3Ey_FxnRKHVg\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8088/api/verify-otp",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8088",
+          "path": [
+            "api",
+            "verify-otp"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Đăng ký - Quá giới hạn",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"ginasthanh@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"firstName\": \"Thanh\",\r\n  \"lastName\": \"Gina\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8088/api/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8088",
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -49,6 +49,30 @@ export const refreshTokenLimiter = rateLimit({
     legacyHeaders: false
 });
 
+/**
+ * Tạo middleware phân quyền theo danh sách roleId cho phép.
+ * Dùng lại cho Admin/Moderator/User mà không cần viết riêng từng hàm mới.
+ */
+export const authorizeRoles = (...allowedRoles) => {
+    return (req, res, next) => {
+        if (!req.user) {
+            return res.status(401).json({
+                errCode: -1,
+                errMessage: 'Chưa xác thực'
+            });
+        }
+
+        if (allowedRoles.includes(req.user.roleId)) {
+            return next();
+        }
+
+        return res.status(403).json({
+            errCode: -1,
+            errMessage: 'Bạn không có quyền truy cập trang này'
+        });
+    };
+};
+
 // ============================================
 // LỚP 2: INPUT VALIDATION
 // Kiểm tra và sanitize dữ liệu đầu vào
@@ -116,22 +140,7 @@ export const authenticateToken = (req, res, next) => {
  * Route: /user/profile
  */
 export const authorizeUser = (req, res, next) => {
-    if (!req.user) {
-        return res.status(401).json({
-            errCode: -1,
-            errMessage: 'Chưa xác thực'
-        });
-    }
-
-    // User (R2) và Admin (R1) đều có thể truy cập /user/profile
-    if (req.user.roleId === 'R2' || req.user.roleId === 'R1') {
-        next();
-    } else {
-        return res.status(403).json({
-            errCode: -1,
-            errMessage: 'Bạn không có quyền truy cập trang này'
-        });
-    }
+    return authorizeRoles('R1', 'R2')(req, res, next);
 };
 
 /**
@@ -140,20 +149,13 @@ export const authorizeUser = (req, res, next) => {
  * Route: /admin/profile
  */
 export const authorizeAdmin = (req, res, next) => {
-    if (!req.user) {
-        return res.status(401).json({
-            errCode: -1,
-            errMessage: 'Chưa xác thực'
-        });
-    }
+    return authorizeRoles('R1')(req, res, next);
+};
 
-    // Chỉ Admin (R1) mới được truy cập /admin/profile
-    if (req.user.roleId === 'R1') {
-        next();
-    } else {
-        return res.status(403).json({
-            errCode: -1,
-            errMessage: 'Chỉ Admin mới có quyền truy cập trang này'
-        });
-    }
+/**
+ * Middleware phân quyền Moderator
+ * Chỉ cho phép user có roleId = 'R3' (Moderator)
+ */
+export const authorizeModerator = (req, res, next) => {
+    return authorizeRoles('R3')(req, res, next);
 };

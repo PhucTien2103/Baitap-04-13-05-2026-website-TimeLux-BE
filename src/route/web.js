@@ -14,8 +14,12 @@ import {
     refreshTokenLimiter,
     authenticateToken, 
     authorizeUser, 
-    authorizeAdmin 
+    authorizeAdmin,
+    authorizeModerator,
+    authorizeRoles 
 } from "../middleware/loginMiddleware";
+import userManagementController from "../controllers/userManagement.controller.js";
+import { createUserValidator, updateUserValidator, deleteUserValidator } from "../middleware/userManagement.middleware.js";
 
 let router = express.Router();
 
@@ -35,6 +39,12 @@ let initWebRoutes = (app) => {
 
     router.get('/user/profile', authenticateToken, authorizeUser, loginController.getUserProfile);
     router.get('/admin/profile', authenticateToken, authorizeAdmin, loginController.getAdminProfile);
+    router.get('/moderator/profile', authenticateToken, authorizeModerator, loginController.getModeratorProfile);
+
+    router.get('/admin/users', authenticateToken, authorizeRoles('R1', 'R3'), userManagementController.listUsers);
+    router.post('/admin/users', authenticateToken, authorizeAdmin, createUserValidator, userManagementController.createUser);
+    router.put('/admin/users/:id', authenticateToken, authorizeAdmin, updateUserValidator, userManagementController.updateUser);
+    router.delete('/admin/users/:id', authenticateToken, authorizeAdmin, deleteUserValidator, userManagementController.deleteUser);
 
     return app.use("/", router);
 }

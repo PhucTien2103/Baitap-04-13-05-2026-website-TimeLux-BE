@@ -24,7 +24,7 @@ export const registerRequest = async (req, res) => {
         const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
         await OTP.create({ email, otp: otpCode, purpose: 'register' });
 
-        await sendOTPEmail(email, otpCode);
+        await sendOTPEmail(email, otpCode, 'register');
         
         res.status(200).json({ 
             message: "OTP đã được gửi đến email của bạn. Vui lòng kiểm tra và xác nhận để hoàn tất.", 
@@ -84,7 +84,7 @@ export const forgotPasswordRequest = async (req, res) => {
         const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
         await OTP.create({ email, otp: otpCode, purpose: 'reset-password' });
 
-        await sendOTPEmail(email, otpCode);
+        await sendOTPEmail(email, otpCode, 'reset-password');
 
         res.status(200).json({
             message: "OTP đổi mật khẩu đã được gửi đến email của bạn.",

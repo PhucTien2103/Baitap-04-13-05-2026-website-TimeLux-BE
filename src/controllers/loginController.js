@@ -121,10 +121,36 @@ let getAdminProfile = async (req, res) => {
     }
 };
 
+// GET /moderator/profile - Lấy thông tin profile (quyền Moderator)
+let getModeratorProfile = async (req, res) => {
+    try {
+        let userId = req.user.id;
+        let result = await loginService.getUserProfile(userId);
+
+        if (result.errCode !== 0) {
+            return res.status(404).json(result);
+        }
+
+        return res.status(200).json({
+            errCode: 0,
+            errMessage: 'Lấy thông tin profile thành công (Moderator)',
+            role: 'moderator',
+            user: result.user
+        });
+    } catch (error) {
+        console.error('Moderator Profile Controller Error:', error);
+        return res.status(500).json({
+            errCode: -1,
+            errMessage: 'Lỗi server khi lấy thông tin profile'
+        });
+    }
+};
+
 module.exports = {
     handleLogin,
     handleRefreshToken,
     handleLogout,
     getUserProfile,
-    getAdminProfile
+    getAdminProfile,
+    getModeratorProfile
 };

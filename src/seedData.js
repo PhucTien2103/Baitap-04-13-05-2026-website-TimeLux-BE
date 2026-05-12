@@ -2,9 +2,10 @@
  * Script Seed Data - Tạo dữ liệu mẫu vào MongoDB
  * Database: btvn01_mongodb
  * 
- * Tạo 2 user mẫu:
+ * Tạo các user mẫu:
  * 1. Admin: admin@chatapp.com / Admin@123 (roleId: R1)
- * 2. User:  user@chatapp.com  / User@123  (roleId: R2)
+ * 2. Moderator: moderator@chatapp.com / Mod@123 (roleId: R3)
+ * 3. User:  user@chatapp.com  / User@123  (roleId: R2)
  * 
  * Password được hash bằng bcryptjs trước khi lưu vào DB.
  * 
@@ -18,11 +19,15 @@ import User from './models/user';
 require('dotenv').config();
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/btvn01_mongodb';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admindoaibiet@gmail.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '123456';
+const MODERATOR_EMAIL = process.env.MODERATOR_EMAIL || 'moderator@chatapp.com';
+const MODERATOR_PASSWORD = process.env.MODERATOR_PASSWORD || 'Mod@123';
 
 const seedUsers = [
     {
-        email: 'admin@chatapp.com',
-        password: 'Admin@123',
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
         firstName: 'Admin',
         lastName: 'System',
         address: 'Hồ Chí Minh',
@@ -30,6 +35,18 @@ const seedUsers = [
         gender: true,
         roleId: 'R1',      // Admin
         positionId: 'P0',
+        isActive: true
+    },
+    {
+        email: MODERATOR_EMAIL,
+        password: MODERATOR_PASSWORD,
+        firstName: 'Moderator',
+        lastName: 'System',
+        address: 'Đà Nẵng',
+        phoneNumber: '0902222333',
+        gender: true,
+        roleId: 'R3',      // Moderator
+        positionId: 'P1',
         isActive: true
     },
     {
@@ -101,7 +118,8 @@ const seedData = async () => {
             });
 
             await user.save();
-            console.log(`✅ Đã tạo ${userData.roleId === 'R1' ? 'ADMIN' : 'USER'}: ${userData.email} | Password gốc: ${userData.password} | isActive: ${userData.isActive}`);
+            const roleLabel = userData.roleId === 'R1' ? 'ADMIN' : userData.roleId === 'R3' ? 'MODERATOR' : 'USER';
+            console.log(`✅ Đã tạo ${roleLabel}: ${userData.email} | isActive: ${userData.isActive}`);
         }
 
         console.log('\n========================================');
@@ -110,23 +128,28 @@ const seedData = async () => {
         console.log('\n📋 THÔNG TIN ĐĂNG NHẬP THỬ:');
         console.log('┌──────────────────────────────────────┐');
         console.log('│ ADMIN:                               │');
-        console.log('│   Email:    admin@chatapp.com        │');
-        console.log('│   Password: Admin@123                │');
+        console.log(`│   Email:    ${ADMIN_EMAIL.padEnd(24)}│`);
+        console.log('│   Password: [đã ẩn trong .env]       │');
         console.log('│   Role:     R1 (Admin)               │');
+        console.log('├──────────────────────────────────────┤');
+        console.log('│ MODERATOR:                           │');
+        console.log(`│   Email:    ${MODERATOR_EMAIL.padEnd(24)}│`);
+        console.log('│   Password: [đã ẩn trong .env]       │');
+        console.log('│   Role:     R3 (Moderator)          │');
         console.log('├──────────────────────────────────────┤');
         console.log('│ USER:                                │');
         console.log('│   Email:    user@chatapp.com         │');
-        console.log('│   Password: User@123                 │');
+        console.log('│   Password: [hash trong DB]          │');
         console.log('│   Role:     R2 (User)                │');
         console.log('├──────────────────────────────────────┤');
         console.log('│ KHANG:                               │');
         console.log('│   Email:    khang@chatapp.com        │');
-        console.log('│   Password: Khang@123                │');
+        console.log('│   Password: [hash trong DB]          │');
         console.log('│   Role:     R2 (User)                │');
         console.log('├──────────────────────────────────────┤');
         console.log('│ INACTIVE (test):                     │');
         console.log('│   Email:    inactive@chatapp.com     │');
-        console.log('│   Password: Inactive@123             │');
+        console.log('│   Password: [hash trong DB]          │');
         console.log('│   isActive: false (chưa kích hoạt)   │');
         console.log('└──────────────────────────────────────┘');
 

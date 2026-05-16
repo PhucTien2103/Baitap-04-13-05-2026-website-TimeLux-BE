@@ -1,69 +1,47 @@
 # TimeLux Backend
 
-Backend Node.js/Express cho đồ án website bán đồng hồ TimeLux.
+TimeLux Backend is a Node.js and Express API server for a luxury watch e-commerce website. The backend provides authentication, role-based authorization, user profile APIs, user management APIs, and product APIs used by the frontend storefront.
 
-Project xử lý đăng ký, đăng nhập, OTP, phân quyền người dùng và API sản phẩm cho giao diện bán hàng ở Frontend.
-
-## Công nghệ sử dụng
+## Tech Stack
 
 - Node.js
 - Express
 - MongoDB
 - Mongoose
-- JWT access token
-- JWT refresh token
+- JSON Web Token
 - bcryptjs
 - express-validator
 - nodemailer
 - nodemon
 - Babel
 
-## Role trong hệ thống
+## Role Mapping
 
 ```txt
 R1: Admin
-R2: User/member
+R2: User / Member
 R3: Moderator
 ```
 
-Phần bán hàng TimeLux dành cho `R2`.
+The product storefront APIs are protected and available for authenticated users with role `R2`.
 
-## Chức năng Backend
+## Main Features
 
-- Đăng ký tài khoản.
-- Gửi OTP xác thực đăng ký.
-- Đăng nhập.
-- Cấp `accessToken` và `refreshToken`.
-- Refresh token.
+- User registration.
+- OTP verification for registration.
+- Login with access token and refresh token.
+- Refresh access token.
 - Logout.
-- Lấy profile theo role.
-- Quản lý user cho Admin/Moderator.
-- API sản phẩm:
-  - Lấy danh sách sản phẩm.
-  - Tìm kiếm sản phẩm.
-  - Lọc theo danh mục.
-  - Lọc theo giá.
-  - Lọc sản phẩm khuyến mãi.
-  - Sắp xếp sản phẩm.
-  - Lấy chi tiết sản phẩm theo id.
+- Forgot password and reset password with OTP.
+- Profile API for User, Admin, and Moderator.
+- User management API for Admin and Moderator flow.
+- Product API for the TimeLux storefront.
 
-## Cách chạy Backend
+## Environment Variables
 
-Mở terminal tại thư mục:
+Create a `.env` file based on `.env.example`.
 
-```powershell
-cd C:\Users\PC\Desktop\CCNPMM\DoAnCuoiKy\website-chatting
-```
-
-Cài package nếu chưa có:
-
-```powershell
-npm install
-```
-
-Tạo file `.env` dựa theo `.env.example`.
-
-Ví dụ:
+Example:
 
 ```env
 PORT=8088
@@ -80,39 +58,45 @@ EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_app_password
 ```
 
-Chạy server:
+## Installation
 
-```powershell
+```bash
+npm install
+```
+
+## Development
+
+```bash
 npm start
 ```
 
-Backend mặc định chạy tại:
+Default backend URL:
 
 ```txt
 http://localhost:8088
 ```
 
-## Seed tài khoản mẫu
+## Seed Data
 
-Chạy lệnh:
+The project includes a seed script for creating sample users.
 
-```powershell
+```bash
 npx babel-node src/seedData.js
 ```
 
-Script này tạo một số user mẫu:
+Sample accounts created by the seed script:
 
 ```txt
-Admin:     lấy email/password từ .env, role R1
-Moderator: lấy email/password từ .env, role R3
-User:      user@chatapp.com / User@123, role R2
-User:      khang@chatapp.com / Khang@123, role R2
-Inactive:  inactive@chatapp.com / Inactive@123, chưa kích hoạt
+Admin:     configured by ADMIN_EMAIL and ADMIN_PASSWORD in .env
+Moderator: configured by MODERATOR_EMAIL and MODERATOR_PASSWORD in .env
+User:      user@chatapp.com / User@123
+User:      khang@chatapp.com / Khang@123
+Inactive:  inactive@chatapp.com / Inactive@123
 ```
 
-Lưu ý: mật khẩu được hash trước khi lưu vào MongoDB.
+Passwords are hashed before being stored in MongoDB.
 
-## API xác thực
+## Authentication APIs
 
 ```txt
 POST /api/register
@@ -124,7 +108,7 @@ POST /api/refresh-token
 POST /api/logout
 ```
 
-Khi login thành công, Backend trả về:
+Successful login returns:
 
 ```txt
 accessToken
@@ -132,9 +116,13 @@ refreshToken
 user
 ```
 
-Frontend lưu token vào `localStorage`.
+Protected APIs require:
 
-## API profile
+```txt
+Authorization: Bearer <accessToken>
+```
+
+## Profile APIs
 
 ```txt
 GET /user/profile
@@ -142,13 +130,7 @@ GET /admin/profile
 GET /moderator/profile
 ```
 
-Các API này cần header:
-
-```txt
-Authorization: Bearer <accessToken>
-```
-
-## API quản lý user
+## User Management APIs
 
 ```txt
 GET    /admin/users
@@ -157,32 +139,26 @@ PUT    /admin/users/:id
 DELETE /admin/users/:id
 ```
 
-Quyền:
+Access control:
 
-- `R1` Admin có quyền quản lý đầy đủ.
-- `R3` Moderator được xem danh sách user, nhưng bị giới hạn một số thao tác theo middleware hiện có.
+- `R1` has full user management permissions.
+- `R3` has limited user management permissions based on the existing middleware.
 
-## API sản phẩm TimeLux
+## Product APIs
 
 ```txt
 GET /api/products
 GET /api/products/:id
 ```
 
-Các API này dành cho role `R2`, có middleware:
+Product APIs use:
 
 ```js
 authenticateToken
 authorizeUser
 ```
 
-Ví dụ gọi danh sách sản phẩm:
-
-```txt
-GET /api/products?search=rose&category=Women's Watches&maxPrice=5000&promotionOnly=true&sortBy=price-low
-```
-
-Query hỗ trợ:
+Supported query parameters for `GET /api/products`:
 
 ```txt
 search
@@ -192,7 +168,7 @@ promotionOnly
 sortBy
 ```
 
-Các giá trị `sortBy`:
+Supported `sortBy` values:
 
 ```txt
 newest
@@ -201,21 +177,21 @@ price-low
 price-high
 ```
 
-Ví dụ gọi chi tiết:
+Example:
+
+```txt
+GET /api/products?search=rose&category=Women's Watches&maxPrice=5000&promotionOnly=true&sortBy=price-low
+```
+
+Product detail example:
 
 ```txt
 GET /api/products/watch-1
 ```
 
-## Dữ liệu sản phẩm
+## Product Data Model
 
-Model sản phẩm nằm ở:
-
-```txt
-src/models/product.js
-```
-
-Các field chính:
+Product schema:
 
 ```txt
 id
@@ -235,58 +211,51 @@ description
 specs
 ```
 
-Nếu collection `products` trong MongoDB đang trống, `product.controller.js` sẽ tự insert danh sách sản phẩm mẫu lần đầu khi gọi API sản phẩm.
+The product model is defined in:
 
-Ảnh không lưu trực tiếp trong MongoDB. Backend chỉ lưu `imageKeys`, Frontend map key đó thành ảnh static trong thư mục asset.
+```txt
+src/models/product.js
+```
 
-## Các file quan trọng
+If the `products` collection is empty, the product controller inserts initial TimeLux sample products when the product API is requested for the first time.
+
+Product images are not stored as binary files in MongoDB. The backend stores `imageKeys`, and the frontend maps those keys to static image assets.
+
+## Project Structure
 
 ```txt
 src/server.js
 ```
 
-Khởi động Express server và kết nối route.
+Express server entry point.
 
 ```txt
 src/config/connectDB.js
 ```
 
-Kết nối MongoDB.
+MongoDB connection configuration.
 
 ```txt
 src/route/web.js
 ```
 
-Khai báo toàn bộ route API.
+Main route registration file.
 
 ```txt
 src/models/user.js
 src/models/product.js
 ```
 
-Schema MongoDB cho user và product.
+Mongoose models.
 
 ```txt
 src/controllers/product.controller.js
 ```
 
-Xử lý API sản phẩm.
+Product API controller.
 
 ```txt
 src/middleware/loginMiddleware.js
 ```
 
-Xác thực access token và kiểm tra role.
-
-## Luồng test bài bán hàng
-
-1. Chạy MongoDB.
-2. Chạy Backend bằng `npm start`.
-3. Chạy Frontend.
-4. Login bằng tài khoản `R2`.
-5. Vào `/home`.
-6. Frontend gọi `GET /api/products`.
-7. Backend kiểm tra token và role `R2`.
-8. Backend trả danh sách sản phẩm từ MongoDB.
-9. Frontend hiển thị UI bán đồng hồ.
-10. Bấm chi tiết sản phẩm, Frontend gọi `GET /api/products/:id`.
+Authentication and role authorization middleware.
